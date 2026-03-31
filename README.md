@@ -1,73 +1,104 @@
-# React + TypeScript + Vite
+# Onda Finance 🌊
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação web simulando um app bancário simples, desenvolvida como desafio técnico para a Onda Finance.
 
-Currently, two official plugins are available:
+## 🔗 Acesso
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+[Acessar aplicação](https://onda-finance.vercel.app)
 
-## React Compiler
+Credenciais de teste:
+- **E-mail:** ygor@onda.com
+- **Senha:** 123456
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Como rodar o projeto
 
-## Expanding the ESLint configuration
+### Pré-requisitos
+- Node.js 18+
+- npm
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Instalação
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/onda-finance.git
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Acesse a pasta
+cd onda-finance
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Instale as dependências
+npm install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Rode em desenvolvimento
+npm run dev
+
+# Rode os testes
+npm run test
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🛠️ Stack utilizada
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Tecnologia | Função |
+|------------|--------|
+| React + TypeScript | Base da aplicação com tipagem estática |
+| Vite | Bundler e dev server |
+| Tailwind CSS v4 | Estilização utilitária |
+| CVA + shadcn/ui + Radix | Componentes acessíveis e estilizados |
+| React Router | Roteamento client-side |
+| React Query | Gerenciamento de estado do servidor |
+| Zustand | Estado global com persistência |
+| React Hook Form + Zod | Formulários com validação de schema |
+| Axios | Cliente HTTP |
+| Vitest | Testes unitários |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🏗️ Decisões técnicas
+
+### Estrutura de pastas
+O projeto segue separação clara por responsabilidade: `pages` para telas, `components` para UI reutilizável, `services` para chamadas de API, `store` para estado global, `schemas` para validações e `types` para tipagem compartilhada.
+
+### Zustand com persist
+O estado de autenticação e saldo são persistidos no localStorage via middleware `persist` do Zustand. Isso garante que a sessão sobrevive a recarregamentos de página sem necessidade de backend.
+
+### Mock de API com delay simulado
+Os serviços utilizam Axios estruturado como em produção, com delays simulados (`setTimeout`) para representar latência de rede real. Substituir os mocks por uma API real exigiria apenas alterar a implementação dos serviços, sem tocar nos componentes.
+
+### React Hook Form + Zod
+A validação é definida em schemas Zod separados dos componentes, permitindo reuso e testabilidade. O `zodResolver` conecta os schemas ao React Hook Form sem boilerplate.
+
+### Rota protegida com hidratação
+O `PrivateRoute` aguarda a hidratação do Zustand antes de decidir o redirecionamento, evitando flashes de conteúdo ou redirecionamentos incorretos ao recarregar páginas autenticadas.
+
+## ✅ Testes
+
+Fluxos testados com Vitest:
+
+- **loginSchema:** validação de e-mail, senha e campos obrigatórios
+- **authService:** autenticação com credenciais corretas, rejeição de credenciais inválidas e garantia de que a senha não é retornada
+```bash
+npm run test
 ```
+
+## 🔒 Segurança (considerações)
+
+### Engenharia reversa
+Em produção, o código seria protegido por:
+- **Minificação e ofuscação** do bundle via Vite no build de produção
+- **Variáveis de ambiente** (`.env`) para chaves e URLs sensíveis, nunca expostas no repositório
+- **Tokens JWT** com curta expiração e renovação via refresh token
+- **HTTPS obrigatório** em todas as comunicações
+
+### Vazamento de dados
+- **Nunca retornar campos sensíveis** (ex: senha) nas respostas de API — aplicado no `authService` via `Omit<User, 'password'>`
+- **Sanitização de inputs** no backend para prevenir XSS e SQL Injection
+- **Headers de segurança HTTP** (CSP, HSTS, X-Frame-Options) configurados no servidor
+- **Tokens armazenados em httpOnly cookies** em produção (não localStorage), impedindo acesso via JavaScript
+- **Rate limiting** nas rotas de autenticação para prevenir ataques de força bruta
+
+## 🔮 Melhorias futuras
+
+- Autenticação real com JWT e refresh token
+- Paginação no histórico de transações
+- Filtros por data e tipo na listagem de transações
+- Modo escuro (dark mode)
+- Gráfico de evolução do saldo
+- Notificações de transferência
+- Testes de integração com Testing Library
+- PWA para acesso mobile
