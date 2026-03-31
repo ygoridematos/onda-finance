@@ -7,12 +7,26 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependências
 node_modules
 dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# Arquivos de ambiente (sensíveis)
+.env
+.env.*
+!.env.example
+
+# Cobertura de testes
+coverage
+.nyc_output
+
+# Build outputs (caso gere outros)
+build
+out
+
+# Editor / IDE
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -22,3 +36,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Cache do Vite / módulos
+.vite
+.cache
+
+# Arquivos de sistema
+Thumbs.db
+Desktop.ini
