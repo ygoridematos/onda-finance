@@ -4,7 +4,7 @@ Aplicação web simulando um app bancário simples, desenvolvida como desafio t�
 
 ## 🔗 Acesso
 
-[Acessar aplicação](https://onda-finance.vercel.app)
+[Acessar aplicação](https://onda-finance-delta.vercel.app/)
 
 Credenciais de teste:
 - **E-mail:** ygor@onda.com
